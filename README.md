@@ -13,9 +13,9 @@ This paper is an analysis on NFL factors that help contributes in the creation o
 
 ## Data
 
-The 2021 NFL play-by-play data set can be found on http://nflsavant.com/about.php
+The raw 2021 NFL play-by-play data set can be found on http://nflsavant.com/about.php. 
 
-## Repo Structure
+## Repository Structure
 
 The raw data set and template used to create the data sheet can be found under the file "inputs/data".
 
