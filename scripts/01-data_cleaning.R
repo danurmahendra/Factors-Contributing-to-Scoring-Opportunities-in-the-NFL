@@ -12,25 +12,36 @@
 
 
 #### Workspace setup ####
-# Use R Projects, not setwd().
-library(haven)
 library(tidyverse)
-# Read in the raw data. 
-raw_data <- readr::read_csv("inputs/data/raw_data.csv"
-                     )
-# Just keep some variables that may be of interest (change 
-# this depending on your interests)
-names(raw_data)
+library(dplyr)
 
-reduced_data <- 
-  raw_data %>% 
-  select(first_col, 
-         second_col)
-rm(raw_data)
-         
+pbp_data2021 <- read_csv("pbp-2021.csv", col_names = TRUE)
+head(pbp_data2021)
+pbp_data2021 <- pbp_data2021 %>%
+  mutate(bigplay = if_else(IsRush == 1 & Yards > 12, 1, 0)) %>%
+  mutate(bigplay1 = if_else(IsPass == 1 & Yards > 16, 1, 0)) %>%
+  mutate(IsBigPlay = bigplay + bigplay1)
 
-#### What's next? ####
+pbp_data2021 <- pbp_data2021 %>%
+  mutate(IsTurnover = IsSack + IsInterception)
+
+pbp_data2021 <- pbp_data2021[-c(11,13,17,18)]
+
+cleaned_pbp <- pbp_data2021 %>%
+  select(c(Quarter, Minute, Second, Down, ToGo, YardLine, Yards, IsIncomplete, Formation, SeriesFirstDown, IsRush, IsPass, IsTurnover, PlayType, PassType, RushDirection, IsTouchdown, IsPenalty, IsBigPlay))
+
+cleaned_pbp <- cleaned_pbp %>%
+  filter(IsPenalty == 0) %>%
+  filter(PlayType == "PASS" | PlayType == "RUSH" | PlayType == "FIELD GOAL" | PlayType == "PUNT") %>%
+  filter(Quarter < 5)
 
 
-
+cleaned_pbp <- cleaned_pbp %>%
+  mutate_all(funs(ifelse(is.na(.), 0, .)))
+cleaned_pbp <- cleaned_pbp %>%
+  filter(!grepl("NOT LISTED", PassType)) %>% 
+  filter(!grepl("INTENDED FOR", PassType)) %>% 
+  filter(!grepl("MIDDLE TO", PassType)) %>%
+  filter(!grepl("RIGHT TO", PassType))
+ 
          
