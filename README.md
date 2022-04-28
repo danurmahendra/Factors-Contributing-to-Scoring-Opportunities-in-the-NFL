@@ -1,7 +1,10 @@
 # Factors Contributing to Scoring Opportunities in the NFL
 
 Author: Danur Mahendra
+
+
 Date: April 27, 2022
+
 email: danur.mahendra@mail.utoronto.ca
 
 ## Overview
